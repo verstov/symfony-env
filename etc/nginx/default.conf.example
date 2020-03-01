@@ -1,0 +1,35 @@
+server {
+    charset utf-8;
+    listen       80;
+    server_name  example.local;
+    root       /www/example/htdocs;
+    index index.php index.html index.htm;
+
+    client_max_body_size 32m;
+  
+
+    access_log  /var/log/nginx/example.access.log;
+    error_log  /var/log/nginx/example.error.log;
+	
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~* /\.(ht|svn|git) {
+        access_log off; log_not_found off; deny all;
+    }
+
+    # Pass all .php files onto a php-fpm/php-fcgi server
+    location ~* \.php$ {
+        try_files $uri =404;
+
+           fastcgi_pass   php-fpm:9000;
+           fastcgi_index  index.php;
+           fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+           include        fastcgi_params;
+		
+	#fastcgi_param HTTP_X_KOHANA_ENV DEVELOPMENT; #HTTP_X_KOHANA_ENV = DEVELOPMENT
+		
+    }
+	
+}

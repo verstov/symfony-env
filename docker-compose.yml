@@ -1,0 +1,63 @@
+version: "3.5"
+services:
+  mysql:
+    image: mysql:5.7
+    hostname: mysql
+    volumes:
+      - "./etc/mysql/my.cnf:/etc/mysql/conf.d/my.cnf"
+      - "./data/mysql/:/var/lib/mysql"
+    environment:
+      MYSQL_USER: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3306:3306"
+    networks:
+      - symfony
+
+  php-fpm:
+    image: webdevops/php-dev:7.4
+    hostname: php-fpm
+    volumes:
+      - "./www:/www"
+      - "./etc/php/php.ini:/usr/local/etc/php/php.ini"
+    working_dir: "/www"
+    depends_on:
+      - mysql
+    networks:
+      - symfony
+
+  nginx:
+    image: webdevops/nginx
+    hostname: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+    - "./www:/www"
+    - "./etc/nginx/:/etc/nginx/conf.d/"
+    - "./logs:/var/log/nginx"
+    depends_on:
+      - php-fpm
+      - mysql
+    networks:
+      - symfony
+
+#  memcached:
+#    image: memcached:latest
+#    hostname: memcached
+#    restart: unless-stopped
+#    ports:
+#      - "11211:11211"
+#    networks:
+#      - symfony
+#    environment:
+#      VIRTUAL_HOST: memcached.dev.loc
+
+volumes:
+  mysql-data:
+    name: symfony_mysql_data
+
+networks:
+  symfony:
+    driver: bridge
+

@@ -1,0 +1,6 @@
+backup/*
+data/mysql/*
+logs/*
+www/*
+etc/nginx/*.conf
+.idea
