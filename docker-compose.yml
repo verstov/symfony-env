@@ -23,6 +23,8 @@ services:
     working_dir: "/www"
     depends_on:
       - mysql
+      - postgres
+      - redis
     networks:
       - symfony
 
@@ -39,6 +41,7 @@ services:
     depends_on:
       - php-fpm
       - mysql
+      - postgres
     networks:
       - symfony
 
@@ -53,9 +56,33 @@ services:
 #    environment:
 #      VIRTUAL_HOST: memcached.dev.loc
 
+  postgres:
+    hostname: postgres
+    image: postgres:latest
+    volumes:
+      - "./data/postgresql/:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_USER: main
+      POSTGRES_PASSWORD: main
+      POSTGRESDB: main
+    ports:
+      - "5432:5432"
+    networks:
+      - symfony
+
+  redis:
+    hostname: redis
+    image: redis:5-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - symfony
+
 volumes:
   mysql-data:
     name: symfony_mysql_data
+  postgres-data:
+    name: symfony_postgres_data
 
 networks:
   symfony:

@@ -1,12 +1,14 @@
 # symfony-env
-Docker Environment for PHP 7.4 &amp; MySQL &amp; NGINX
+Docker Environment for PHP 7.4 &amp; MySQL &amp; NGINX &amp; postgresql 12 &amp; redis 5
 
 ## Описание
   - Данный репозиторий предназначен для поднятия через docker окружения для разработки в PHP
     - в процессе развертывания поднимается три связанных контейнера.
       - nginx
       - PHP 7.4
-      - mysql
+      - mysql 5.7
+      - postgresql 12
+      - redis 5
       - memcache (опционально, надо раскоментировать для раоты)
      
     ### Структура  
@@ -14,6 +16,7 @@ Docker Environment for PHP 7.4 &amp; MySQL &amp; NGINX
     - backup (бекапы базы при старте)
     - data (данные хранимые вне контейнера)
         - mysql
+        - postgresql
     - etc (файлы конфигов)
         - mysql
         - php 
